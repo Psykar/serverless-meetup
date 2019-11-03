@@ -29,6 +29,8 @@ func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (Response, 
 
 	var message string
 	message = req.Path
+
+	log.Print(fmt.Sprint("Called with path: ", req.Path))
 	statusCode := 200
 
 	// Could use a third party routing library at this point, but being hacky for now

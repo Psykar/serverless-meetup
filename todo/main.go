@@ -31,31 +31,40 @@ func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (Response, 
 	message = req.Path
 	statusCode := 200
 
-	switch req.Path {
-	case "/list":
-		items, err := List()
-		if err != nil {
-			statusCode = 500
-			message = fmt.Sprint(err)
-		} else {
-			message = strings.Join(items, "\n")
-		}
-	case "/add":
-		err := Add(req.Body)
-		if err != nil {
-			statusCode = 500
-			message = fmt.Sprint(err)
-		} else {
-			message = "Added"
-		}
+	items := strings.Split(req.Path, "/")
+	var item string
+	if len(items) > 1 {
+		item = strings.Join(items[2:], "/")
+	}
 
-	case "/complete":
-		err := Complete(req.Body)
-		if err != nil {
-			statusCode = 500
-			message = fmt.Sprint(err)
-		} else {
-			message = "Completed"
+	if len(items) >= 1 {
+
+		switch items[1] {
+		case "list":
+			items, err := List()
+			if err != nil {
+				statusCode = 500
+				message = fmt.Sprint(err)
+			} else {
+				message = strings.Join(items, "\n")
+			}
+		case "add":
+			err := Add(item)
+			if err != nil {
+				statusCode = 500
+				message = fmt.Sprint(err)
+			} else {
+				message = "Added"
+			}
+
+		case "complete":
+			err := Complete(item)
+			if err != nil {
+				statusCode = 500
+				message = fmt.Sprint(err)
+			} else {
+				message = "Completed"
+			}
 		}
 	}
 
@@ -97,7 +106,7 @@ func List() ([]string, error) {
 
 	results := []string{}
 	for _, row := range scanOutput.Items {
-		results = append(results, row[todoKey].String())
+		results = append(results, *row[todoKey].S)
 	}
 	return results, nil
 }

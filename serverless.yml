@@ -30,7 +30,13 @@ provider:
 #  region: us-east-1
 
 # you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:*"
+      Resource: "*"
+
+
 #    - Effect: "Allow"
 #      Action:
 #        - "s3:ListBucket"

@@ -23,4 +23,7 @@ jobs:
       uses: actions/setup-node@v1.1.0
       
     - name: Deploy
-      run: npm install -g serverless && make deploy
+      run: |
+       npm install -g serverless &&
+       npm install serverless-offline && 
+       make deploy
